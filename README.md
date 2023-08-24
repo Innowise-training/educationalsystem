@@ -32,7 +32,8 @@ Naming convention:
       </modules>
     ```
 6. Delete `.gitinnore`, `HELP.md`, `mvnw`, `mvnw.cmd` if present
-
+7. Add `impl` as a dependency to `api` pom.xml module
+8. Add `api` module as a dependency to `educationalapplication` pom.xml module as a dependency
 ---
 
 #### Adding library
@@ -45,7 +46,7 @@ Naming convention:
             <groupId>com.innowise</groupId>
             <artifactId>educationalsystem</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <relativePath>../../../pom.xml</relativePath>
+            <relativePath>../../pom.xml</relativePath>
         </parent>
     ```
 4. Add new `LIBRARY-NAME-lib` module to parent pom.xml section `<modules></modules>` that is situated in root folder.
@@ -58,3 +59,4 @@ Naming convention:
        </modules>
    ```
 5. Delete `.gitinnore`, `HELP.md`, `mvnw`, `mvnw.cmd` if present
+6. Add `LIBRARY-NAME-lib` module to `educationalapplication` pom.xml module as a dependency
