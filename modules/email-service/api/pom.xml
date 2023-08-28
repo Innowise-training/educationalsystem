@@ -20,8 +20,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.innowise</groupId>
-            <artifactId>subscription-impl</artifactId>
+            <artifactId>email-impl</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -36,6 +36,11 @@
         </dependency>
         <dependency>
             <groupId>com.innowise</groupId>
+            <artifactId>email-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.innowise</groupId>
             <artifactId>urm-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
