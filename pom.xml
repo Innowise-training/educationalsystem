@@ -25,6 +25,7 @@
         <module>modules/urm/impl</module>
         <module>modules/email-service/api</module>
         <module>modules/email-service/impl</module>
+        <module>modules/security-lib</module>
     </modules>
 
     <properties>
