@@ -1,0 +1,22 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:postgresql://localhost:5432/k8s
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+# TODO: Replace with a real webhook
+
+stripe:
+  webhook-key: whsec_5970bdd53d21725f2512a55d9d15bdfb894a14b86ca04fe809ab6667286b2dd3
+  secret-key: sk_test_51NiCGkILCX0zp90zN4AYDHODZVMyVqmWq8jffrcBQgLacYwWzl1c155nEURakrXLgR7szh8ewc7p5pywALwTlpF9006ThuBBd8

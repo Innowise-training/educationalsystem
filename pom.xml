@@ -26,6 +26,8 @@
         <module>modules/email-service/api</module>
         <module>modules/email-service/impl</module>
         <module>modules/security-lib</module>
+        <module>modules/payment-service/api</module>
+        <module>modules/payment-service/impl</module>
     </modules>
 
     <properties>
