@@ -31,6 +31,8 @@
         <module>modules/security-lib</module>
         <module>modules/payment-service/api</module>
         <module>modules/payment-service/impl</module>
+        <module>modules/unit-service/api</module>
+        <module>modules/unit-service/impl</module>
     </modules>
 
     <properties>
