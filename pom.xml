@@ -28,6 +28,9 @@
         <module>modules/course-service/api</module>
         <module>modules/course-service/impl</module>
         <module>modules/crud-lib</module>
+        <module>modules/security-lib</module>
+        <module>modules/payment-service/api</module>
+        <module>modules/payment-service/impl</module>
     </modules>
 
     <properties>
