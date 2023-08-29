@@ -1,4 +1,4 @@
-package com.innowise.educationalsystem.maper;
+package com.innowise.educationalsystem.mapper;
 
 
 import com.innowise.educationalsystem.dto.JwtDto;

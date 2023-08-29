@@ -14,9 +14,6 @@
     <name>urm-api</name>
     <description>api</description>
 
-    <properties>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.innowise</groupId>

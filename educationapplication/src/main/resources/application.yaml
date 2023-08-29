@@ -1,4 +1,11 @@
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DB_URL}
@@ -9,3 +16,8 @@ app:
   security:
     secret-key: ${SECRET}
     token-expire: ${TOKEN_EXPIRE}
+  urm:
+    invite:
+      expiration:
+        validation: ${INVITE_VALIDATION_EXPIRATION}
+        registration: ${INVITE_REGISTRATION_EXPIRATION}
