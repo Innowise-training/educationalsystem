@@ -1,0 +1,9 @@
+kafka:
+  topic:
+    mail-request: ${KAFKA_MAIL_REQUEST_TOPIC_NAME:mail-request}
+    mail-response: ${KAFKA_MAIL_RESPONSE_TOPIC_NAME:mail-response}
+    attempt-request: ${KAFKA_ATTEMPT_REQUEST_TOPIC_NAME:attempt-request}
+    attempt-response: ${KAFKA_ATTEMPT_RESPONSE_TOPIC_NAME:attempt-response}
+  consumer:
+    mail:
+      default-group-id: mail-group
