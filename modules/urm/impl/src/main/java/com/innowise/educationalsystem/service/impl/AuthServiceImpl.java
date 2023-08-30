@@ -9,9 +9,7 @@ import com.innowise.educationalsystem.dto.UserResponseDto;
 import com.innowise.educationalsystem.dto.UserSignUpRequestDto;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.User;
-import com.innowise.educationalsystem.exception.NoSuchUserException;
 import com.innowise.educationalsystem.exception.UserAlreadyExistsException;
-import com.innowise.educationalsystem.exception.UserWrongCredentials;
 import com.innowise.educationalsystem.mapper.JwtMapper;
 import com.innowise.educationalsystem.mapper.UserMapper;
 import com.innowise.educationalsystem.repository.UserRepository;
@@ -19,9 +17,11 @@ import com.innowise.educationalsystem.service.AuthService;
 import com.innowise.educationalsystem.service.InviteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -71,13 +71,14 @@ public class AuthServiceImpl implements AuthService {
 
     private UserResponseDto findUserByCredentials(LoginRequestDto request) {
         Optional<User> userByUsername = userRepository.findUserByUsername(request.getUsername());
-        userByUsername.orElseThrow(() -> new NoSuchUserException("Nickname or password is wrong"));
+        userByUsername.orElseThrow(() -> new EntityNotFoundException(String.format(
+                "User with username %s doesn't exist", request.getUsername())));
         return userMapper.entityToDto(userByUsername.get());
     }
 
     private void authenticateUser(LoginRequestDto request, UserResponseDto foundUser) {
         if (!passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
-            throw new UserWrongCredentials("Wrong credentials");
+            throw new BadCredentialsException("Wrong credentials");
         }
     }
 
