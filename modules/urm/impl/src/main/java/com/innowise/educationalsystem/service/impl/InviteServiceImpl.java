@@ -1,11 +1,14 @@
 package com.innowise.educationalsystem.service.impl;
 
 import com.innowise.educationalsystem.client.NotificationClient;
+import com.innowise.educationalsystem.dto.InviteRequestDto;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.InviteStatus;
+import com.innowise.educationalsystem.entity.Role;
 import com.innowise.educationalsystem.exception.ClosedInviteException;
 import com.innowise.educationalsystem.exception.InviteNotValidatedException;
 import com.innowise.educationalsystem.repository.InviteRepository;
+import com.innowise.educationalsystem.repository.RoleRepository;
 import com.innowise.educationalsystem.service.InviteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,8 @@ import javax.persistence.EntityNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -26,6 +31,7 @@ public class InviteServiceImpl implements InviteService {
 
     private final NotificationClient notificationClient;
     private final InviteRepository inviteRepository;
+    private final RoleRepository roleRepository;
 
     @Value("${app.urm.invite.expiration.validation}")
     private Duration validationExpirationTime;
@@ -35,12 +41,18 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     @Transactional
-    public Invite create(Invite invite, Long subscriptionId) {
-        rejectOldInvites(invite);
+    public Invite create(InviteRequestDto inviteRequestDto, Long subscriptionId) {
+        rejectOldInvites(inviteRequestDto.getEmail());
 
-        invite.setSubscriptionId(subscriptionId);
-        invite.setValidationExpiredAt(LocalDateTime.now().plus(validationExpirationTime));
-        invite.setStatus(InviteStatus.NEW);
+        List<Role> roles = roleRepository.findAllById(inviteRequestDto.getRoleIds());
+        Invite invite = Invite.builder()
+                .email(inviteRequestDto.getEmail())
+                .roles(new HashSet<>(roles))
+                .subscriptionId(subscriptionId)
+                .validationExpiredAt(LocalDateTime.now().plus(validationExpirationTime))
+                .status(InviteStatus.NEW)
+                .build();
+
         invite = inviteRepository.save(invite);
         log.info("Created invite with id {}", invite.getId());
 
@@ -93,8 +105,8 @@ public class InviteServiceImpl implements InviteService {
             new EntityNotFoundException(String.format("Invite with id %s doesn't exist", id)));
     }
 
-    private void rejectOldInvites(Invite newInvite) {
-        inviteRepository.findAllByEmail(newInvite.getEmail())
+    private void rejectOldInvites(String email) {
+        inviteRepository.findAllByEmail(email)
             .forEach(invite -> {
                 if (invite.getStatus() == InviteStatus.SUCCESS ||
                     invite.getStatus() == InviteStatus.REJECTED ||

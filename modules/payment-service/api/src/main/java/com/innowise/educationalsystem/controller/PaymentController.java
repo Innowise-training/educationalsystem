@@ -9,6 +9,7 @@ import com.innowise.educationalsystem.mapper.PaymentMapper;
 import com.innowise.educationalsystem.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class PaymentController {
      * @return created payment id
      */
     @PostMapping
+    @PreAuthorize("hasAuthority('PAYMENT_INIT')")
     public PaymentDto initPayment(@RequestBody @Valid PaymentRequestDto paymentRequestDto) {
         Payment payment = paymentMapper.mapToEntity(paymentRequestDto);
         Payment initializedPayment = paymentService.initPayment(payment);
@@ -44,6 +46,7 @@ public class PaymentController {
      * @return {@link PaymentApiDto} with updated status of a payment
      */
     @PostMapping("{id}/{status}")
+    @PreAuthorize("hasAuthority('PAYMENT_PROCEED_STATUS')")
     public PaymentApiDto proceedPaymentStatus(@PathVariable("id") long id, @PathVariable("status") PaymentStatus status) {
         Payment payment = paymentService.proceedPaymentStatus(id, status);
         return paymentMapper.mapToApiDto(payment);
@@ -57,6 +60,7 @@ public class PaymentController {
      */
     //TODO: Using OpenFeign | Kafka ??? send a request to callBackUri (it's a service url thar requested a payment)
     @GetMapping("{id}")
+    @PreAuthorize("hasAuthority('PAYMENT_GET_STATUS')")
     public PaymentDto findById(@PathVariable("id") long id) {
         // TODO: make a callback for URI in paymentRequest inside a service method. It will be used in WebHook or some other endpoint we interact with payment integration system
         Payment payment = paymentService.finById(id);

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,15 +23,16 @@ public class InviteController {
     private final InviteMapper inviteMapper;
 
     @PostMapping("/subscription/{subscriptionId}")
+    @PreAuthorize("hasAuthority('INVITE_USER')")
     public ResponseEntity<?> create(
             @RequestBody @Valid InviteRequestDto inviteRequestDto,
             @PathVariable("subscriptionId") Long subscriptionId) {
-        Invite invite = inviteMapper.requestDtoToEntity(inviteRequestDto);
-        inviteService.create(invite, subscriptionId);
+        inviteService.create(inviteRequestDto, subscriptionId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{inviteId}")
+    @PreAuthorize("hasAuthority('INVITE_USER')")
     public ResponseEntity<ValidatedInviteResponseDto> validateInvite(@PathVariable("inviteId") String id) {
         Invite invite = inviteService.validateInvite(id);
         ValidatedInviteResponseDto validateInviteResponseDto = inviteMapper.entityToValidateResponseDto(invite);

@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +31,14 @@ public class UnitController {
     private final UnitMapper unitMapper;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('COURSE_GET')")
     public ResponseEntity<List<UnitDto>> getAllUnits() {
         List<Unit> units = unitService.findAll();
         return ResponseEntity.ok().body(unitMapper.toDtoList(units));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('COURSE_GET')")
     public ResponseEntity<UnitDto> getUnitById(@PathVariable("id") String id) {
         Unit unit = unitService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Unit not found with id: " + id));
@@ -43,6 +46,7 @@ public class UnitController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('COURSE_MATERIALS_EDIT')")
     public ResponseEntity<UnitDto> createUnit(@Valid @RequestBody CreateUnitDto createUnitDto) {
         Unit unit = unitMapper.createUnitDtoToUnit(createUnitDto);
         Unit createdUnit = unitService.save(unit);
@@ -50,6 +54,7 @@ public class UnitController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('COURSE_MATERIALS_EDIT')")
     public ResponseEntity<UnitDto> updateUnit(@Valid @RequestBody UpdateUnitDto updateUnitDto) {
         Unit unit = unitMapper.updateUnitDtoToUnit(updateUnitDto);
         Unit updatedUnit = unitService.save(unit);
@@ -57,6 +62,7 @@ public class UnitController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('COURSE_MATERIALS_EDIT')")
     public ResponseEntity<Void> deleteUnit(@PathVariable String id) {
         unitService.deleteById(id);
         return ResponseEntity.noContent().build();
