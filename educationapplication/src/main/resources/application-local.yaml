@@ -1,18 +1,30 @@
 spring:
+  kafka:
+    consumer:
+      enable-auto-commit: off
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: com.innowise.educationalsystem.*
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        spring.json.trusted.packages: com.innowise.educationalsystem.*
+    bootstrap-servers: localhost:9092
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/db_auth
+    url: jdbc:postgresql://localhost:5432/k8s
     username: postgres
-    password: postgres
+    password: root
 
 app:
+  retry:
+    attempt: 3
   security:
     secret-key: secret
     token-expire: 1h
@@ -21,3 +33,11 @@ app:
       expiration:
         validation: 24h
         registration: 1h
+  kafka:
+    groups:
+      mail: mail-group
+    topics:
+      mail-request: mail-request
+      mail-response: mail-response
+      attempt-request: attempt-request
+      attempt-response: attempt-response

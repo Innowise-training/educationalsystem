@@ -1,21 +1,25 @@
 package com.innowise.educationalsystem.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+import java.util.List;
+
+@Setter
+@Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserResponseDto {
-    private String username;
+    private String id;
 
-    private String password;
+    private String username;
 
     private String email;
 
-    private String roles;
-
+    private List<RoleResponseDto> roles;
 }

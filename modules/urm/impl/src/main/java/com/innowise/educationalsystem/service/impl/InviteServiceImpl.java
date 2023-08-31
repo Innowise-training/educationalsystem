@@ -3,9 +3,12 @@ package com.innowise.educationalsystem.service.impl;
 import com.innowise.educationalsystem.client.NotificationClient;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.InviteStatus;
+import com.innowise.educationalsystem.entity.User;
+import com.innowise.educationalsystem.entity.enumeration.UserStatus;
 import com.innowise.educationalsystem.exception.ClosedInviteException;
 import com.innowise.educationalsystem.exception.InviteNotValidatedException;
 import com.innowise.educationalsystem.repository.InviteRepository;
+import com.innowise.educationalsystem.repository.UserRepository;
 import com.innowise.educationalsystem.service.InviteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +28,10 @@ public class InviteServiceImpl implements InviteService {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final NotificationClient notificationClient;
+
     private final InviteRepository inviteRepository;
+
+    private final UserRepository userRepository;
 
     @Value("${app.urm.invite.expiration.validation}")
     private Duration validationExpirationTime;
@@ -38,10 +44,13 @@ public class InviteServiceImpl implements InviteService {
     public Invite create(Invite invite, Long subscriptionId) {
         rejectOldInvites(invite);
 
-        invite.setSubscriptionId(subscriptionId);
+        User invitedUser = createUser(invite, subscriptionId);
+
         invite.setValidationExpiredAt(LocalDateTime.now().plus(validationExpirationTime));
         invite.setStatus(InviteStatus.NEW);
+        invite.setUser(invitedUser);
         invite = inviteRepository.save(invite);
+
         log.info("Created invite with id {}", invite.getId());
 
         notificationClient.sendInvite(invite);
@@ -72,8 +81,8 @@ public class InviteServiceImpl implements InviteService {
         checkIfInviteAvailable(invite);
         if (invite.getStatus() != InviteStatus.VALIDATED) {
             throw new InviteNotValidatedException(String.format(
-                "Invite with id %s is not validated. Invite status: %s",
-                invite.getId(), invite.getStatus()));
+                    "Invite with id %s is not validated. Invite status: %s",
+                    invite.getId(), invite.getStatus()));
         }
 
         log.info("Found invite with id {}", invite.getId());
@@ -85,38 +94,39 @@ public class InviteServiceImpl implements InviteService {
         invite.setStatus(InviteStatus.SUCCESS);
         inviteRepository.save(invite);
         log.info("Invite with id {} was closed with status {}",
-            invite.getId(), invite.getStatus());
+                invite.getId(), invite.getStatus());
     }
 
     private Invite getById(String id) {
         return inviteRepository.findById(id).orElseThrow(() ->
-            new EntityNotFoundException(String.format("Invite with id %s doesn't exist", id)));
+                new EntityNotFoundException(String.format("Invite with id %s doesn't exist", id)));
     }
 
     private void rejectOldInvites(Invite newInvite) {
         inviteRepository.findAllByEmail(newInvite.getEmail())
-            .forEach(invite -> {
-                if (invite.getStatus() == InviteStatus.SUCCESS ||
-                    invite.getStatus() == InviteStatus.REJECTED ||
-                    invite.getStatus() == InviteStatus.EXPIRED) {
-                    return;
-                }
+                .forEach(invite -> {
+                    if (invite.getStatus() == InviteStatus.SUCCESS ||
+                            invite.getStatus() == InviteStatus.REJECTED) {
+                        return;
+                    }
 
-                invite.setStatus(InviteStatus.REJECTED);
-                inviteRepository.save(invite);
-                log.info("Invite with id {} was closed with status {}",
-                    invite.getId(), invite.getStatus());
-            });
+                    invite.setStatus(InviteStatus.REJECTED);
+                    inviteRepository.save(invite);
+                    log.info("Invite with id {} was closed with status {}",
+                            invite.getId(), invite.getStatus());
+                });
     }
 
     private void checkIfInviteAvailable(Invite invite) {
         switch (invite.getStatus()) {
             case REJECTED:
             case SUCCESS:
+                throw new ClosedInviteException(String.format(
+                        "Invite with id %s is already closed. Invite status: %s",
+                        invite.getId(), invite.getStatus()));
             case EXPIRED:
                 throw new ClosedInviteException(String.format(
-                    "Invite with id %s is already closed. Invite status: %s",
-                    invite.getId(), invite.getStatus()));
+                        "Invite with id %s already expired", invite.getId()));
             case VALIDATED:
                 checkIfExpired(invite, invite.getRegistrationExpiredAt());
                 break;
@@ -132,7 +142,22 @@ public class InviteServiceImpl implements InviteService {
             inviteRepository.save(invite);
 
             throw new ClosedInviteException(String.format("Invite already expired at %s",
-                expiredDate.format(FORMATTER)));
+                    expiredDate.format(FORMATTER)));
         }
+    }
+
+    private User createUser(Invite invite, long subscriptionId) {
+        User user = userRepository.findByEmail(invite.getEmail())
+                .orElseGet(User::new);
+
+        user.setEmail(invite.getEmail());
+        user.setSubscriptionId(subscriptionId);
+        user.setStatus(UserStatus.INVITED);
+        // TODO: establish roles for User (from Invite entity)
+        user = userRepository.save(user);
+
+        log.info("Created user with id {}", user.getId());
+
+        return user;
     }
 }

@@ -37,11 +37,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.integralblue</groupId>
-            <artifactId>log4jdbc-spring-boot-starter</artifactId>
-            <version>${log4jdbc.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.integralblue</groupId>-->
+<!--            <artifactId>log4jdbc-spring-boot-starter</artifactId>-->
+<!--            <version>${log4jdbc.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.innowise</groupId>
             <artifactId>crud-lib</artifactId>
@@ -51,6 +51,11 @@
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
             <version>${hibernate-types-52.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.innowise</groupId>
+            <artifactId>crud-lib</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
