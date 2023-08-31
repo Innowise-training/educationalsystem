@@ -11,6 +11,8 @@ public class InviteRequestDto {
     @NotBlank
     private String email;
 
+    // TODO: make ROLE list of Strings...
+
     @NotBlank
     private String roles;
 }

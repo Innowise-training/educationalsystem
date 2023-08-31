@@ -5,6 +5,7 @@ import com.innowise.educationalsystem.security.properties.SecurityProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties({SecurityProperties.class})
 public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final AuthorizationFilter authorizationFilter;
@@ -27,6 +29,7 @@ public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/login/**").permitAll()
+                .antMatchers("/api/v1/users/have-permissions").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);

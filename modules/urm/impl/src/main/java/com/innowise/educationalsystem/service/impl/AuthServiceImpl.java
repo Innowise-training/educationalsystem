@@ -5,9 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.innowise.educationalsystem.config.SecurityProperties;
 import com.innowise.educationalsystem.dto.JwtDto;
 import com.innowise.educationalsystem.dto.LoginRequestDto;
-import com.innowise.educationalsystem.dto.UserResponseDto;
 import com.innowise.educationalsystem.dto.UserSignUpRequestDto;
 import com.innowise.educationalsystem.entity.Invite;
+import com.innowise.educationalsystem.entity.Permission;
+import com.innowise.educationalsystem.entity.Role;
 import com.innowise.educationalsystem.entity.User;
 import com.innowise.educationalsystem.exception.NoSuchUserException;
 import com.innowise.educationalsystem.exception.UserAlreadyExistsException;
@@ -21,17 +22,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private static final String TOKEN_SUBSCRIPTION = "subscription_id";
-
     private static final String TOKEN_AUTHORITIES = "authorities";
+    private static final String USER_ID_CLAIM = "user_id";
 
     private final UserRepository userRepository;
 
@@ -47,46 +50,50 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtDto loginUser(LoginRequestDto request, Long subscriptionId) {
-        UserResponseDto response = findUserByCredentials(request);
-        authenticateUser(request, response);
-        return jwtMapper.rawTokenToDto(generateToken(response, subscriptionId));
+        User foundUser = findUserByCredentials(request);
+        authenticateUser(request, foundUser);
+        return jwtMapper.rawTokenToDto(generateToken(foundUser, subscriptionId));
     }
 
     @Override
+    @Transactional
     public User signUp(UserSignUpRequestDto userSignUpRequestDto) {
         Invite invite = inviteService.getForSignUp(userSignUpRequestDto.getInviteId());
         checkIfUserAlreadyExists(userSignUpRequestDto);
+        User user = invite.getUser();
+        userMapper.updateUserByDto(userSignUpRequestDto, user); // update user according to dto
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        User newUser = userMapper.signUpDtoToEntity(userSignUpRequestDto);
-        newUser.setPassword(passwordEncoder.encode(userSignUpRequestDto.getPassword()));
-        newUser.setSubscriptionId(invite.getSubscriptionId());
-        newUser.setEmail(invite.getEmail());
-        newUser.setRoles(invite.getRoles());
-
-        newUser = userRepository.save(newUser);
+        user = userRepository.save(user);
         inviteService.close(invite);
-        log.info("Created user with id {}", newUser.getId());
-        return newUser;
+        log.info("Created user with id {}", user.getId());
+        return user;
     }
 
-    private UserResponseDto findUserByCredentials(LoginRequestDto request) {
-        Optional<User> userByUsername = userRepository.findUserByUsername(request.getUsername());
-        userByUsername.orElseThrow(() -> new NoSuchUserException("Nickname or password is wrong"));
-        return userMapper.entityToDto(userByUsername.get());
+    private User findUserByCredentials(LoginRequestDto request) {
+        return userRepository.findUserByUsernameWithRolesAndPermissions(request.getUsername())
+                .orElseThrow(() -> new NoSuchUserException("Bad credentials"));
     }
 
-    private void authenticateUser(LoginRequestDto request, UserResponseDto foundUser) {
+    private void authenticateUser(LoginRequestDto request, User foundUser) {
         if (!passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
             throw new UserWrongCredentials("Wrong credentials");
         }
     }
 
-    private String generateToken(UserResponseDto response, Long subscriptionId) {
+    private String generateToken(User foundUser, Long subscriptionId) {
         long now = System.currentTimeMillis();
+        List<String> userPermissions = foundUser.getRoles().stream()
+                .map(Role::getPermissions)
+                .flatMap(authorities -> authorities.stream()
+                        .map(Permission::getDescription))
+                .collect(Collectors.toList());
+
         return JWT.create()
-                .withSubject(response.getUsername())
+                .withSubject(foundUser.getUsername())
                 .withClaim(TOKEN_SUBSCRIPTION, subscriptionId)
-                .withClaim(TOKEN_AUTHORITIES, response.getRoles())
+                .withClaim(TOKEN_AUTHORITIES, userPermissions)
+                .withClaim(USER_ID_CLAIM, foundUser.getId())
                 .withIssuedAt(new Date(now))
                 .withExpiresAt(new Date(now + properties.getTokenExpire().toMillis()))
                 .sign(Algorithm.HMAC256(properties.getSecretKey()));

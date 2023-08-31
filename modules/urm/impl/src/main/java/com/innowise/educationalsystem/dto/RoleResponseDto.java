@@ -14,12 +14,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
+public class RoleResponseDto {
     private String id;
 
-    private String username;
+    private String name;
 
-    private String email;
-
-    private List<RoleResponseDto> roles;
+    private List<PermissionResponseDto> permissions;
 }
