@@ -1,21 +1,27 @@
 package com.innowise.educationalsystem.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "invites")
 @Getter
 @Setter
-@ToString
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Invite {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -30,8 +36,12 @@ public class Invite {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "role", nullable = false)
-    private String roles;
+    @ManyToMany
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "invite_roles",
+               joinColumns = @JoinColumn(name = "fk_invite"),
+               inverseJoinColumns = @JoinColumn(name = "fk_role"))
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "subscription_id", nullable = false)
     private Long subscriptionId;

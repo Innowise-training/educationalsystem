@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +31,14 @@ public class CourseController {
     private final CourseMapper courseMapper;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('COURSE_GET')")
     public ResponseEntity<List<CourseDto>> getAllCourses() {
         List<Course> courses = courseService.findAll();
         return ResponseEntity.ok().body(courseMapper.toDtoList(courses));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('COURSE_GET')")
     public ResponseEntity<CourseDto> getCourseById(@PathVariable("id") String id) {
         Course course = courseService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + id));
@@ -43,6 +46,7 @@ public class CourseController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('COURSE_MANAGE')")
     public ResponseEntity<CourseDto> createCourse(@Valid @RequestBody CreateCourseDto createCourseDto) {
         Course course = courseMapper.createCourseDtoToCourse(createCourseDto);
         Course createdCourse = courseService.save(course);
@@ -50,6 +54,7 @@ public class CourseController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('COURSE_EDIT')")
     public ResponseEntity<CourseDto> updateCourse(@Valid @RequestBody UpdateCourseDto updateCourseDto) {
         Course course = courseMapper.updateCourseDtoToCourse(updateCourseDto);
         Course updatedCourse = courseService.save(course);
@@ -57,6 +62,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('COURSE_MANAGE')")
     public ResponseEntity<Void> deleteCourse(@PathVariable String id) {
         courseService.deleteById(id);
         return ResponseEntity.noContent().build();

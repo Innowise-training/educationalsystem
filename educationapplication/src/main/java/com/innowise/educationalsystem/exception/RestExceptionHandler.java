@@ -114,6 +114,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    @ExceptionHandler(NoSuchRoleException.class)
+    protected ResponseEntity<Object> handleNoSuchRole(NoSuchRoleException ex) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User doesn't have such role", ex);
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(SystemRoleDeletionException.class)
+    protected ResponseEntity<Object> handleSystemRoleDeletion(SystemRoleDeletionException ex) {
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT, "Unable to delete system roles", ex);
+        return buildResponseEntity(apiError);
+    }
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleAllExceptions(Exception ex) {
         String logId = UUID.randomUUID().toString();

@@ -5,7 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.innowise.educationalsystem.config.SecurityProperties;
 import com.innowise.educationalsystem.dto.JwtDto;
 import com.innowise.educationalsystem.dto.LoginRequestDto;
-import com.innowise.educationalsystem.dto.UserResponseDto;
+import com.innowise.educationalsystem.dto.PermissionResponseDto;
+import com.innowise.educationalsystem.dto.UserLoginDto;
 import com.innowise.educationalsystem.dto.UserSignUpRequestDto;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.User;
@@ -23,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -47,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtDto loginUser(LoginRequestDto request, Long subscriptionId) {
-        UserResponseDto response = findUserByCredentials(request);
+        UserLoginDto response = findUserByCredentials(request);
         authenticateUser(request, response);
         return jwtMapper.rawTokenToDto(generateToken(response, subscriptionId));
     }
@@ -69,25 +72,31 @@ public class AuthServiceImpl implements AuthService {
         return newUser;
     }
 
-    private UserResponseDto findUserByCredentials(LoginRequestDto request) {
+    private UserLoginDto findUserByCredentials(LoginRequestDto request) {
         Optional<User> userByUsername = userRepository.findUserByUsername(request.getUsername());
         userByUsername.orElseThrow(() -> new EntityNotFoundException(String.format(
                 "User with username %s doesn't exist", request.getUsername())));
-        return userMapper.entityToDto(userByUsername.get());
+        return userMapper.entityToLoginDto(userByUsername.get());
     }
 
-    private void authenticateUser(LoginRequestDto request, UserResponseDto foundUser) {
+    private void authenticateUser(LoginRequestDto request, UserLoginDto foundUser) {
         if (!passwordEncoder.matches(request.getPassword(), foundUser.getPassword())) {
             throw new BadCredentialsException("Wrong credentials");
         }
     }
 
-    private String generateToken(UserResponseDto response, Long subscriptionId) {
+    private String generateToken(UserLoginDto response, Long subscriptionId) {
         long now = System.currentTimeMillis();
+        List<String> authorities = response.getRoles()
+                .stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(PermissionResponseDto::getName)
+                .collect(Collectors.toList());
+
         return JWT.create()
                 .withSubject(response.getUsername())
                 .withClaim(TOKEN_SUBSCRIPTION, subscriptionId)
-                .withClaim(TOKEN_AUTHORITIES, response.getRoles())
+                .withClaim(TOKEN_AUTHORITIES, authorities)
                 .withIssuedAt(new Date(now))
                 .withExpiresAt(new Date(now + properties.getTokenExpire().toMillis()))
                 .sign(Algorithm.HMAC256(properties.getSecretKey()));
