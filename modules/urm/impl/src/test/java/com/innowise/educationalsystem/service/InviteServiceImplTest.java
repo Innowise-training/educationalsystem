@@ -1,7 +1,6 @@
 package com.innowise.educationalsystem.service;
 
 import com.innowise.educationalsystem.client.NotificationClient;
-import com.innowise.educationalsystem.client.mock.MockNotificationClient;
 import com.innowise.educationalsystem.dto.InviteRequestDto;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.InviteStatus;
@@ -37,7 +36,7 @@ class InviteServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        notificationClient = Mockito.mock(MockNotificationClient.class);
+        notificationClient = Mockito.mock(NotificationClient.class);
         inviteRepository = Mockito.mock(InviteRepository.class);
         roleRepository = Mockito.mock(RoleRepository.class);
         inviteService = new InviteServiceImpl(notificationClient, inviteRepository, roleRepository);
