@@ -1,23 +1,17 @@
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+#spring:
+#  datasource:
+#    username: ${POSTGRES_USERNAME:postgres}
+#    password: ${POSTGRES_PASSWORD:postgres}
+#    url: ${SONG_DB_CONNECTION_URL:jdbc:postgresql://localhost:5432/educational_system_task_db}
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    database: postgresql
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#  kafka:
+#    bootstrap-servers: localhost:9092
 
-app:
-  security:
-    secret-key: ${SECRET}
-    token-expire: ${TOKEN_EXPIRE}
-  urm:
-    invite:
-      expiration:
-        validation: ${INVITE_VALIDATION_EXPIRATION}
-        registration: ${INVITE_REGISTRATION_EXPIRATION}

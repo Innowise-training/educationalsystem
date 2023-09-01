@@ -33,6 +33,8 @@
         <module>modules/payment-service/impl</module>
         <module>modules/unit-service/api</module>
         <module>modules/unit-service/impl</module>
+        <module>modules/task-service/api</module>
+        <module>modules/task-service/impl</module>
     </modules>
 
     <properties>
