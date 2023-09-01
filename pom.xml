@@ -37,7 +37,7 @@
     <properties>
         <java.version>8</java.version>
         <testcontainers.version>1.18.0</testcontainers.version>
-        <openfeign.version>4.0.0</openfeign.version>
+        <openfeign.version>2.2.9.RELEASE</openfeign.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.28</lombok.version>
         <checkstyle.version>10.12.2</checkstyle.version>
