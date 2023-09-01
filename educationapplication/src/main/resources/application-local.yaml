@@ -1,16 +1,23 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/db_auth
-    username: postgres
-    password: postgres
+    primary:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/postgres?currentSchema=s1
+      username: postgres
+      password: password
+    subscription:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/conn_details_db
+      username: connect
+      password: details
+
 
 app:
   security:

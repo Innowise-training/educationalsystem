@@ -1,4 +1,4 @@
-package com.innowise.educationalsystem.configuration;
+package com.innowise.educationalsystem.configuration.hibernate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,27 +21,27 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = {"com.innowise.educationalsystem.subscription.repository"},
-        entityManagerFactoryRef = "connectionDetailsEntityManagerFactory",
-        transactionManagerRef = "connectionDetailsTransactionManager"
+        entityManagerFactoryRef = "subscriptionDetailsEntityManagerFactory",
+        transactionManagerRef = "subscriptionDetailsTransactionManager"
 )
-public class ConnectionDetailsConfiguration {
+public class SubscriptionDatabaseConfiguration {
     @Bean
-    @ConfigurationProperties("spring.datasource.connection")
-    public DataSourceProperties connectionDataSourceProperties() {
+    @ConfigurationProperties("spring.datasource.subscription")
+    public DataSourceProperties subscriptionDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean
-    @Qualifier("connectionDetailsDataSource")
-    public DataSource connectionDetailsDataSource() {
-        return connectionDataSourceProperties()
+    @Qualifier("subscriptionDetailsDataSource")
+    public DataSource subscriptionDetailsDataSource() {
+        return subscriptionDataSourceProperties()
                 .initializeDataSourceBuilder()
                 .build();
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean connectionDetailsEntityManagerFactory(
-            @Qualifier("connectionDetailsDataSource") DataSource dataSource,
+    public LocalContainerEntityManagerFactoryBean subscriptionDetailsEntityManagerFactory(
+            @Qualifier("subscriptionDetailsDataSource") DataSource dataSource,
             EntityManagerFactoryBuilder builder) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
@@ -53,9 +53,9 @@ public class ConnectionDetailsConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager connectionDetailsTransactionManager(
-            @Qualifier("connectionDetailsEntityManagerFactory") LocalContainerEntityManagerFactoryBean connectionDetailsEntityManagerFactory) {
-        return new JpaTransactionManager(Objects.requireNonNull(connectionDetailsEntityManagerFactory.getObject()));
+    public PlatformTransactionManager subscriptionDetailsTransactionManager(
+            @Qualifier("subscriptionDetailsEntityManagerFactory") LocalContainerEntityManagerFactoryBean subscriptionDetailsEntityManagerFactory) {
+        return new JpaTransactionManager(Objects.requireNonNull(subscriptionDetailsEntityManagerFactory.getObject()));
     }
 
 

@@ -1,4 +1,4 @@
-package com.innowise.educationalsystem.configuration;
+package com.innowise.educationalsystem.configuration.hibernate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         transactionManagerRef = "primaryTransactionManager",
         excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*ConnectionDetailsRepository")
 )
-public class PrimaryDataSourceConfiguration {
+public class PrimaryDatabaseConfiguration {
     @Bean
     @Primary
     @ConfigurationProperties("spring.datasource.primary")
@@ -50,9 +50,15 @@ public class PrimaryDataSourceConfiguration {
     @Primary
     public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(
             @Qualifier("primaryDetailsDataSource") DataSource dataSource,
-            EntityManagerFactoryBuilder builder) {
+            EntityManagerFactoryBuilder builder,
+            SchemaDataSourceBasedMultiTenantConnectionProviderImpl schemaDataSourceBasedMultiTenantConnectionProvider,
+            TenantIdentifierResolver tenantIdentifierResolver) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.multi_tenant_connection_provider", schemaDataSourceBasedMultiTenantConnectionProvider);
+        properties.put("hibernate.tenant_identifier_resolver", tenantIdentifierResolver);
+        properties.put("hibernate.multiTenancy", "SCHEMA");
+
         return builder
                 .dataSource(dataSource)
                 .packages("com.innowise.educationalsystem")
