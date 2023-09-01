@@ -6,15 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserHavePermissionsDto {
-    private String userId;
+public class UserHavePermissionsRequestDto {
+    @NotEmpty
+    private List<String> userIdList;
 
-    private String email;
-
-    private boolean hasRequestedPermissions;
+    @NotEmpty
+    private List<String> authorityList;
 }

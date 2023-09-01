@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.service.impl;
 
-import com.innowise.educationalsystem.dto.UserHavePermissionsDto;
+import com.innowise.educationalsystem.dto.UserHavePermissionsResponseDto;
 import com.innowise.educationalsystem.dto.UserHavePermissionsRequestDto;
 import com.innowise.educationalsystem.entity.Permission;
 import com.innowise.educationalsystem.entity.Role;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     // TODO: optimize
-    public List<UserHavePermissionsDto> verifyUserAuthorities(UserHavePermissionsRequestDto userHavePermissionsRequestDto) {
+    public List<UserHavePermissionsResponseDto> verifyUserAuthorities(UserHavePermissionsRequestDto userHavePermissionsRequestDto) {
         return userHavePermissionsRequestDto.getUserIdList().stream()
                 .map(userId -> userRepository.findByIdWithRolesAndPermissions(userId)
                         .orElseThrow(EntityNotFoundException::new))
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
                                             .map(Permission::getDescription))
                                     .anyMatch(requestedAuthority::equals)
                             );
-                    return UserHavePermissionsDto.builder()
+                    return UserHavePermissionsResponseDto.builder()
                             .userId(user.getId())
                             .email(user.getEmail())
                             .hasRequestedPermissions(hasRequestedPermissions)

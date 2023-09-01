@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.controller;
 
-import com.innowise.educationalsystem.dto.UserHavePermissionsDto;
+import com.innowise.educationalsystem.dto.UserHavePermissionsResponseDto;
 import com.innowise.educationalsystem.dto.UserHavePermissionsRequestDto;
 import com.innowise.educationalsystem.dto.UserResponseDto;
 import com.innowise.educationalsystem.service.UserService;
@@ -26,7 +26,7 @@ public class UserController {
      * @return List of {@link UserResponseDto} that NOT have a requestedRoles
      */
     @PostMapping("have-permissions")
-    public List<UserHavePermissionsDto> verifyRequestedAuthorities(
+    public List<UserHavePermissionsResponseDto> verifyRequestedAuthorities(
             @RequestBody @Valid UserHavePermissionsRequestDto userHavePermissionsRequestDto) {
         return userService.verifyUserAuthorities(userHavePermissionsRequestDto);
     }

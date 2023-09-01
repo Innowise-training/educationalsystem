@@ -2,8 +2,8 @@ package com.innowise.educationalsystem.course.service.impl;
 
 import com.innowise.educationalsystem.course.annotation.CourseEnrollmentRequired;
 import com.innowise.educationalsystem.course.dto.MailRequest;
-import com.innowise.educationalsystem.course.dto.UserHaveAuthoritiesRequestDto;
-import com.innowise.educationalsystem.course.dto.UserHavePermissionsDto;
+import com.innowise.educationalsystem.course.dto.UserHavePermissionsRequestDto;
+import com.innowise.educationalsystem.course.dto.UserHavePermissionsResponseDto;
 import com.innowise.educationalsystem.course.dto.enums.MailType;
 import com.innowise.educationalsystem.course.entity.UserCourse;
 import com.innowise.educationalsystem.course.entity.UserCourseId;
@@ -54,10 +54,10 @@ public class CourseEnrolServiceImpl implements CourseEnrolService {
         List<String> enrolRequestedAuthorities = new ArrayList<>();
         enrolRequestedAuthorities.add(ENROL_STUDENT_PERMISSION);
 
-        List<UserHavePermissionsDto> userWithPermissionsDetails = getUsersWithRequestedPermissions(userIdList, enrolRequestedAuthorities);
+        List<UserHavePermissionsResponseDto> userWithPermissionsDetails = getUsersWithRequestedPermissions(userIdList, enrolRequestedAuthorities);
 
         boolean allNotHaveRequestedPermission = userWithPermissionsDetails.stream()
-                .noneMatch(UserHavePermissionsDto::isHasRequestedPermissions);
+                .noneMatch(UserHavePermissionsResponseDto::isHasRequestedPermissions);
 
         if (!allNotHaveRequestedPermission &&
                 principalNotHaveRequestedPermission(ENROL_OWNER_PERMISSION)) {
@@ -84,10 +84,10 @@ public class CourseEnrolServiceImpl implements CourseEnrolService {
         List<String> expelRequestedAuthorities = new ArrayList<>();
         expelRequestedAuthorities.add(EXPEL_STUDENT_PERMISSION);
 
-        List<UserHavePermissionsDto> userWithPermissionsDetails = getUsersWithRequestedPermissions(userIdList, expelRequestedAuthorities);
+        List<UserHavePermissionsResponseDto> userWithPermissionsDetails = getUsersWithRequestedPermissions(userIdList, expelRequestedAuthorities);
 
         boolean allNotHaveRequestedPermission = userWithPermissionsDetails.stream()
-                .noneMatch(UserHavePermissionsDto::isHasRequestedPermissions);
+                .noneMatch(UserHavePermissionsResponseDto::isHasRequestedPermissions);
 
         if (!allNotHaveRequestedPermission &&
                 principalNotHaveRequestedPermission(EXPEL_OWNER_PERMISSION)) {
@@ -113,15 +113,15 @@ public class CourseEnrolServiceImpl implements CourseEnrolService {
                 new SimpleGrantedAuthority(requestedPermission));
     }
 
-    private List<UserHavePermissionsDto> getUsersWithRequestedPermissions(List<String> userIdList, List<String> requestedPermissions) {
-        ResponseEntity<List<UserHavePermissionsDto>> response = restTemplate.exchange(
+    private List<UserHavePermissionsResponseDto> getUsersWithRequestedPermissions(List<String> userIdList, List<String> requestedPermissions) {
+        ResponseEntity<List<UserHavePermissionsResponseDto>> response = restTemplate.exchange(
                 URI.create("http://localhost:8080/api/v1/users/have-permissions"),
                 HttpMethod.POST,
-                new HttpEntity<>(UserHaveAuthoritiesRequestDto.builder()
+                new HttpEntity<>(UserHavePermissionsRequestDto.builder()
                         .userIdList(userIdList)
                         .authorityList(requestedPermissions)
                         .build()),
-                new ParameterizedTypeReference<List<UserHavePermissionsDto>>() {
+                new ParameterizedTypeReference<List<UserHavePermissionsResponseDto>>() {
                 }); // TODO: Replace with FeignClient
         return response.getBody();
     }
