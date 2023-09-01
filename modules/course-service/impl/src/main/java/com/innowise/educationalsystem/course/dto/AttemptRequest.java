@@ -1,19 +1,21 @@
-package com.innowise.educationalsystem.dto;
+package com.innowise.educationalsystem.course.dto;
 
-import com.innowise.educationalsystem.entity.enums.CreationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
+import java.util.Map;
+import java.util.Optional;
+
 @Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MailResponse {
+public class AttemptRequest {
     private String mailId;
 
-    private CreationStatus creationStatus;
+    private Optional<Map<String, Object>> payload;
 }

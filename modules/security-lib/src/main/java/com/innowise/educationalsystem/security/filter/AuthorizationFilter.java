@@ -19,10 +19,10 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.singletonMap;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -36,7 +36,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_PREFIX = "Bearer ";
     private static final String AUTHORITIES_CLAIM = "authorities";
     private static final String SUBSCRIPTION_CLAIM = "subscription_id";
+    private static final String USER_ID_CLAIM = "user_id";
     private static final String AUTH_DETAILS_SUBSCRIPTION_KEY = "subscriptionId";
+    private static final String AUTH_DETAILS_USER_ID_KEY = "userId";
 
     private final SecurityProperties securityProperties;
 
@@ -55,6 +57,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
                 String username = decodedJwt.getSubject();
                 String subscriptionId = decodedJwt.getClaim(SUBSCRIPTION_CLAIM).asString();
+                String userId = decodedJwt.getClaim(USER_ID_CLAIM).asString();
                 List<SimpleGrantedAuthority> authorities = Arrays
                         .stream(decodedJwt.getClaim(AUTHORITIES_CLAIM).asArray(String.class))
                         .map(SimpleGrantedAuthority::new)
@@ -62,7 +65,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(username, null, authorities);
-                Map<String, Object> authenticationDetails = singletonMap(AUTH_DETAILS_SUBSCRIPTION_KEY, subscriptionId);
+                Map<String, Object> authenticationDetails = new HashMap<>();
+                authenticationDetails.put(AUTH_DETAILS_SUBSCRIPTION_KEY, subscriptionId);
+                authenticationDetails.put(AUTH_DETAILS_USER_ID_KEY, userId);
                 authentication.setDetails(authenticationDetails);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

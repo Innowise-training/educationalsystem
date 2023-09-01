@@ -1,12 +1,12 @@
 package com.innowise.educationalsystem.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Setter
@@ -14,12 +14,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
-    private String id;
+public class UserHavePermissionsRequestDto {
+    @NotEmpty
+    private List<String> userIdList;
 
-    private String username;
-
-    private String email;
-
-    private List<RoleResponseDto> roles;
+    @NotEmpty
+    private List<String> authorityList;
 }

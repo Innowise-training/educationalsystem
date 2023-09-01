@@ -25,11 +25,6 @@
             <artifactId>subscription-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.innowise</groupId>-->
-<!--            <artifactId>security</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.innowise</groupId>
             <artifactId>security</artifactId>
@@ -48,7 +43,11 @@
             <groupId>com.innowise</groupId>
             <artifactId>urm-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.innowise</groupId>
+            <artifactId>course-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
