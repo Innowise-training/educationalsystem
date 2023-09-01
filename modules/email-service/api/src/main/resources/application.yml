@@ -1,8 +1,8 @@
 spring:
   datasource:
     username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:abc123}
-    url: ${SONG_DB_CONNECTION_URL:jdbc:postgresql://localhost:5432/educational_system_mail_db}
+    password: ${POSTGRES_PASSWORD:postgres}
+    url: ${MAIL_DB_CONNECTION_URL:jdbc:postgresql://localhost:5432/educational_system_mail_db}
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql

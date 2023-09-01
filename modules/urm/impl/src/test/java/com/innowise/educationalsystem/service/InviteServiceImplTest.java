@@ -13,10 +13,11 @@ import com.innowise.educationalsystem.client.NotificationClient;
 import com.innowise.educationalsystem.client.mock.MockNotificationClient;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.InviteStatus;
-import com.innowise.educationalsystem.exception.EntityNotFoundException;
-import com.innowise.educationalsystem.exception.InviteExpiredException;
+import com.innowise.educationalsystem.exception.ClosedInviteException;
 import com.innowise.educationalsystem.repository.InviteRepository;
 import com.innowise.educationalsystem.service.impl.InviteServiceImpl;
+
+import javax.persistence.EntityNotFoundException;
 
 class InviteServiceImplTest {
     private InviteServiceImpl inviteService;
@@ -69,7 +70,7 @@ class InviteServiceImplTest {
         Mockito.when(inviteRepository.findById(id))
             .thenReturn(Optional.of(invite));
 
-        Assertions.assertThrows(InviteExpiredException.class, () ->
+        Assertions.assertThrows(ClosedInviteException.class, () ->
             inviteService.validateInvite(id));
     }
 
@@ -116,7 +117,7 @@ class InviteServiceImplTest {
         Mockito.when(inviteRepository.findById(id))
             .thenReturn(Optional.of(invite));
 
-        Assertions.assertThrows(InviteExpiredException.class, () ->
+        Assertions.assertThrows(ClosedInviteException.class, () ->
             inviteService.validateInvite(id));
     }
 

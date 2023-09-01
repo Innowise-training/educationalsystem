@@ -4,8 +4,6 @@ import com.innowise.educationalsystem.client.NotificationClient;
 import com.innowise.educationalsystem.entity.Invite;
 import com.innowise.educationalsystem.entity.InviteStatus;
 import com.innowise.educationalsystem.exception.ClosedInviteException;
-import com.innowise.educationalsystem.exception.EntityNotFoundException;
-import com.innowise.educationalsystem.exception.InviteExpiredException;
 import com.innowise.educationalsystem.exception.InviteNotValidatedException;
 import com.innowise.educationalsystem.repository.InviteRepository;
 import com.innowise.educationalsystem.service.InviteService;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -98,7 +97,8 @@ public class InviteServiceImpl implements InviteService {
         inviteRepository.findAllByEmail(newInvite.getEmail())
             .forEach(invite -> {
                 if (invite.getStatus() == InviteStatus.SUCCESS ||
-                    invite.getStatus() == InviteStatus.REJECTED) {
+                    invite.getStatus() == InviteStatus.REJECTED ||
+                    invite.getStatus() == InviteStatus.EXPIRED) {
                     return;
                 }
 
@@ -113,12 +113,10 @@ public class InviteServiceImpl implements InviteService {
         switch (invite.getStatus()) {
             case REJECTED:
             case SUCCESS:
+            case EXPIRED:
                 throw new ClosedInviteException(String.format(
                     "Invite with id %s is already closed. Invite status: %s",
                     invite.getId(), invite.getStatus()));
-            case EXPIRED:
-                throw new InviteExpiredException(String.format(
-                    "Invite with id %s already expired", invite.getId()));
             case VALIDATED:
                 checkIfExpired(invite, invite.getRegistrationExpiredAt());
                 break;
@@ -133,7 +131,7 @@ public class InviteServiceImpl implements InviteService {
             invite.setStatus(InviteStatus.EXPIRED);
             inviteRepository.save(invite);
 
-            throw new InviteExpiredException(String.format("Invite already expired at %s",
+            throw new ClosedInviteException(String.format("Invite already expired at %s",
                 expiredDate.format(FORMATTER)));
         }
     }
