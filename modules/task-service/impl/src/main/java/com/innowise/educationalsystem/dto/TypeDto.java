@@ -4,5 +4,11 @@ import lombok.Data;
 
 @Data
 public class TypeDto {
-    private String id;
+    private Object in;
+
+    private Object out;
+
+    private String name;
+
+    private SubtypeDto subtype;
 }
