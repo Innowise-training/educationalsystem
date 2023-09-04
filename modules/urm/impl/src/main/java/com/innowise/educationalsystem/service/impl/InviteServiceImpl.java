@@ -54,11 +54,9 @@ public class InviteServiceImpl implements InviteService {
                 .build();
 
         invite = inviteRepository.save(invite);
-        log.info("Created invite with id {}", invite.getId());
-
         notificationClient.sendInvite(invite);
-        log.info("Sent invite with id {} to notification service", invite.getId());
 
+        log.info("Created invite with id {}", invite.getId());
         return invite;
     }
 

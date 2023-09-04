@@ -12,6 +12,7 @@
 
     <artifactId>urm-api</artifactId>
     <name>urm-api</name>
+    <packaging>jar</packaging>
     <description>api</description>
 
     <dependencies>
