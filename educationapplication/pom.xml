@@ -17,6 +17,7 @@
     <description>educationapplication</description>
 
     <properties>
+        <liquibase.version>4.15.0</liquibase.version>
     </properties>
 
     <dependencies>
@@ -48,6 +49,11 @@
             <groupId>com.innowise</groupId>
             <artifactId>course-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
         </dependency>
     </dependencies>
 

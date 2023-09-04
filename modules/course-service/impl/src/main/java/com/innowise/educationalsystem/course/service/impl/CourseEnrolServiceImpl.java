@@ -24,7 +24,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +87,11 @@ public class CourseEnrolServiceImpl implements CourseEnrolService {
             Map<String, Object> payload = new HashMap<>();
             payload.put("courseId", courseId); // TODO: replace with course name ???
             payload.put("message", "You was successfully enrolled in course"); // TODO: replace with course name ???
-//            notifyUserAboutCourse(userDto.getEmail(), payload); // TODO: How to send mail to users.
+            notifyUserAboutCourse(MailRequest.builder()
+                    .mailType(MailType.INVITE)
+                    .payload(payload)
+                    .destinationEmail(userDto.getEmail())
+                    .build());
         });
     }
 
@@ -118,7 +120,11 @@ public class CourseEnrolServiceImpl implements CourseEnrolService {
             Map<String, Object> payload = new HashMap<>();
             payload.put("courseId", courseId); // TODO: replace with course name ???
             payload.put("message", "You was expelled from course"); // TODO: replace with course name ???
-//            notifyUserAboutCourse(userDto.getEmail(), payload);
+            notifyUserAboutCourse(MailRequest.builder()
+                    .mailType(MailType.INVITE)
+                    .payload(payload)
+                    .destinationEmail(userDto.getEmail())
+                    .build());
         });
     }
 
@@ -142,13 +148,7 @@ public class CourseEnrolServiceImpl implements CourseEnrolService {
         return response.getBody();
     }
 
-    @Scheduled(fixedRate = 90000)
-    public void notifyUserAboutCourse() {
-        MailRequest mailRequest = MailRequest.builder()
-                .mailType(MailType.WELCOMING_LETTER) // TODO: Replace with another type
-                .destinationEmail("email")
-                .payload(Collections.singletonMap("key", "value"))
-                .build();
+    public void notifyUserAboutCourse(MailRequest mailRequest) {
         NotificationPayload mailPayload = new MailRequestPayload(mailRequest); // TODO: replace with factory ???
         NotificationAddress mailNotificationAddress = new KafkaSingleTopicNotificationAddress(kafkaConfigProperties.getTopics().get(KAFKA_MAIL_REQUEST_TOPIC_PROPERTY));
         notificationService.sendNotification(new SimpleNotification(mailRequest.getDestinationEmail(), mailPayload, mailNotificationAddress));

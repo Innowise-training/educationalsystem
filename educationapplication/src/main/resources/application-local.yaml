@@ -1,4 +1,6 @@
 spring:
+  liquibase:
+    enabled: false
   kafka:
     consumer:
       enable-auto-commit: off
@@ -21,7 +23,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/k8s
     username: postgres
     password: root
-
+  # test database for migrations : jdbc:postgresql://localhost:5432/courses?schema=sub1&user=postgres&password=root
 app:
   retry:
     attempt: 3
@@ -41,3 +43,6 @@ app:
       mail-response: mail-response
       attempt-request: attempt-request
       attempt-response: attempt-response
+  migrations:
+    changelog-master: /migrations/changelog-master.xml
+
