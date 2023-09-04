@@ -1,7 +1,7 @@
 package com.innowise.educationalsystem.service.impl;
 
 import com.innowise.educationalsystem.crud.service.AbstractCrudService;
-import com.innowise.educationalsystem.entity.Task;
+import com.innowise.educationalsystem.document.Task;
 import com.innowise.educationalsystem.repository.TaskRepository;
 import com.innowise.educationalsystem.service.TaskService;
 import org.springframework.stereotype.Service;
