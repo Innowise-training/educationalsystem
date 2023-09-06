@@ -1,7 +1,7 @@
 package com.innowise.educationalsystem.document.subtype.ordering.impl;
 
 import com.innowise.educationalsystem.document.subtype.ordering.OrderingSubtype;
-import com.innowise.educationalsystem.dto.SubtypeDto;
+import com.innowise.educationalsystem.dto.temp.SubtypeDto;
 import org.springframework.data.annotation.TypeAlias;
 
 import java.util.List;

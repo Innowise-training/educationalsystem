@@ -1,7 +1,7 @@
 package com.innowise.educationalsystem.controller;
 
-import com.innowise.educationalsystem.dto.TypeDto;
 import com.innowise.educationalsystem.document.Task;
+import com.innowise.educationalsystem.dto.TaskDto;
 import com.innowise.educationalsystem.factory.TypeFactory;
 import com.innowise.educationalsystem.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,9 @@ public class TypeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Task<?, ?, ?> createTask(@RequestBody TypeDto typeDto) {
-        return taskService.save(typeFactory.provideTask(typeDto));
+    public TaskDto<?, ?, ?> createTask(@RequestBody TaskDto<?, ?, ?> taskDto) {
+        //return taskService.save(typeFactory.provideTask(typeDto));
+        return taskDto;
     }
 
     @GetMapping

@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.document.subtype.ordering;
 
-import com.innowise.educationalsystem.dto.SubtypeDto;
+import com.innowise.educationalsystem.dto.temp.SubtypeDto;
 import com.innowise.educationalsystem.document.Subtype;
 import org.springframework.data.mongodb.core.mapping.Document;
 

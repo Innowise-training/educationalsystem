@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.document.subtype.translation.impl;
 
-import com.innowise.educationalsystem.dto.SubtypeDto;
+import com.innowise.educationalsystem.dto.temp.SubtypeDto;
 import com.innowise.educationalsystem.document.subtype.translation.TranslationSubtype;
 import org.springframework.data.annotation.TypeAlias;
 

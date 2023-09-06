@@ -1,8 +1,9 @@
 package com.innowise.educationalsystem.document.task;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.innowise.educationalsystem.document.Task;
 import com.innowise.educationalsystem.document.subtype.translation.TranslationSubtype;
-import com.innowise.educationalsystem.dto.TypeDto;
+import com.innowise.educationalsystem.dto.temp.TypeDto;
 import com.innowise.educationalsystem.factory.subtype.SubtypeFactory;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 
 @TypeAlias("Translation")
+@JsonTypeName("Translation")
 @Document(collection = "tasks")
 public class TranslationTask<T extends TranslationSubtype<?>> extends Task<String, List<String>, T> {
     public TranslationTask() {

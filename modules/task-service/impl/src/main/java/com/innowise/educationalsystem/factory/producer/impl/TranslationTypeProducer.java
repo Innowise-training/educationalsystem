@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.factory.producer.impl;
 
-import com.innowise.educationalsystem.dto.TypeDto;
+import com.innowise.educationalsystem.dto.temp.TypeDto;
 import com.innowise.educationalsystem.document.subtype.translation.TranslationSubtype;
 import com.innowise.educationalsystem.document.task.TranslationTask;
 import com.innowise.educationalsystem.enums.TypeName;

@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.factory.subtype.impl;
 
-import com.innowise.educationalsystem.dto.SubtypeDto;
+import com.innowise.educationalsystem.dto.temp.SubtypeDto;
 import com.innowise.educationalsystem.document.subtype.translation.impl.PuzzleSubtype;
 import com.innowise.educationalsystem.document.subtype.translation.TranslationSubtype;
 import com.innowise.educationalsystem.document.subtype.translation.impl.WritingSubtype;

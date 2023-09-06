@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.factory.producer;
 
-import com.innowise.educationalsystem.dto.TypeDto;
+import com.innowise.educationalsystem.dto.temp.TypeDto;
 import com.innowise.educationalsystem.document.Task;
 
 public interface TypeProducer {

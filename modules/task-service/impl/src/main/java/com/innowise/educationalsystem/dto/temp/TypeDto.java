@@ -1,4 +1,4 @@
-package com.innowise.educationalsystem.dto;
+package com.innowise.educationalsystem.dto.temp;
 
 import lombok.Data;
 

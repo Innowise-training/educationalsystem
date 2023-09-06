@@ -1,6 +1,6 @@
 package com.innowise.educationalsystem.factory;
 
-import com.innowise.educationalsystem.dto.TypeDto;
+import com.innowise.educationalsystem.dto.temp.TypeDto;
 import com.innowise.educationalsystem.document.Task;
 import com.innowise.educationalsystem.exception.TypeCreationException;
 import com.innowise.educationalsystem.factory.producer.TypeProducer;

@@ -3,7 +3,7 @@ package com.innowise.educationalsystem.factory.subtype.impl;
 import com.innowise.educationalsystem.document.Subtype;
 import com.innowise.educationalsystem.document.subtype.ordering.impl.PuzzleSubtype;
 import com.innowise.educationalsystem.document.subtype.ordering.impl.SemiwritingSubtype;
-import com.innowise.educationalsystem.dto.SubtypeDto;
+import com.innowise.educationalsystem.dto.temp.SubtypeDto;
 import com.innowise.educationalsystem.exception.SubtypeCreationException;
 import com.innowise.educationalsystem.factory.subtype.SubtypeFactory;
 import org.springframework.stereotype.Component;
