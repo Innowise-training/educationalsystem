@@ -7,7 +7,7 @@ import com.innowise.educationalsystem.service.TaskService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TaskServiceImpl extends AbstractCrudService<Task<?, ?, ?>, String, TaskRepository> implements TaskService {
+public class TaskServiceImpl extends AbstractCrudService<Task<?, ?>, String, TaskRepository> implements TaskService {
 
     public TaskServiceImpl(TaskRepository crudRepository) {
         super(crudRepository);

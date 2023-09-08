@@ -4,5 +4,5 @@ import com.innowise.educationalsystem.dto.subtype.ordering.OrderingSubtype;
 
 import java.util.Set;
 
-public class PuzzleSubtypeDto extends OrderingSubtype<Set<String>> {
+public class OrderingPuzzleSubtypeDto extends OrderingSubtype<Set<String>> {
 }

@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "tasks")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "name")
 @JsonSubTypes(@JsonSubTypes.Type(value = TranslationTask.class, name = "Translation"))
-public abstract class Task<IN, OUT, T extends Subtype> {
+public abstract class Task<IN, OUT> {
     @Id
     protected String id;
 
@@ -24,7 +24,7 @@ public abstract class Task<IN, OUT, T extends Subtype> {
 
     protected OUT out;
 
-    protected T subtype;
+    protected Subtype<?> subtype;
 
     @Field(name = "_class")
     protected String typeName;
@@ -32,6 +32,6 @@ public abstract class Task<IN, OUT, T extends Subtype> {
     protected Task(TypeDto typeDto, SubtypeFactory subtypeFactory) {
         in = (IN) typeDto.getIn();
         out = (OUT) typeDto.getOut();
-        subtype = (T) subtypeFactory.provideSubtype(typeDto.getSubtype());
+        subtype = subtypeFactory.provideSubtype(typeDto.getSubtype());
     }
 }

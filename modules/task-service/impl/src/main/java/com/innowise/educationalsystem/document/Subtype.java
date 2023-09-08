@@ -18,6 +18,10 @@ public abstract class Subtype<ADD> {
     @Field(name = "_class")
     protected String subtypeName;
 
+    protected Subtype(ADD additionalData) {
+        this.additionalData = additionalData;
+    }
+
     protected Subtype(SubtypeDto subtypeDto) {
         additionalData = (ADD) subtypeDto.getAdd();
     }

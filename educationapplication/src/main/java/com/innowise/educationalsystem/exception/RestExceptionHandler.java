@@ -26,7 +26,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.UUID;
 
 @Slf4j
-@RestControllerAdvice
+//@RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override

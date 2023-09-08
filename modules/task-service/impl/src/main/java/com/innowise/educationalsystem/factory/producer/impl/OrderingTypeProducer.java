@@ -17,8 +17,8 @@ public class OrderingTypeProducer implements TypeProducer {
     private final SubtypeFactory orderingSubtypeFactory;
 
     @Override
-    public OrderingTask<? extends OrderingSubtype<?>> produce(TypeDto typeDto) {
-        return new OrderingTask<>(typeDto, orderingSubtypeFactory);
+    public OrderingTask produce(TypeDto typeDto) {
+        return new OrderingTask(typeDto, orderingSubtypeFactory);
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.Set;
 
 @TypeAlias("Ordering")
 @Document(collection = "tasks")
-public class OrderingTask<T extends OrderingSubtype<?>> extends Task<Set<String>, List<String>, T> {
+public class OrderingTask extends Task<Set<String>, List<String>> {
     public OrderingTask() {
         super();
     }

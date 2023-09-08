@@ -14,7 +14,7 @@ import java.util.List;
 public class TypeFactory {
     private final List<TypeProducer> typeProducers;
 
-    public Task<?, ?, ?> provideTask(TypeDto typeDto) {
+    public Task<?, ?> provideTask(TypeDto typeDto) {
 
         return typeProducers.stream()
                 .filter(p -> p.canProduce(typeDto.getName()))

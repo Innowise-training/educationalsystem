@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @TypeAlias("Translation")
 @JsonTypeName("Translation")
 @Document(collection = "tasks")
-public class TranslationTask<T extends TranslationSubtype<?>> extends Task<String, List<String>, T> {
+public class TranslationTask extends Task<String, List<String>> {
     public TranslationTask() {
         super();
     }

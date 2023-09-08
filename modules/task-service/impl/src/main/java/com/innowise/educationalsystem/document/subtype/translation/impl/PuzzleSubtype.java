@@ -6,13 +6,17 @@ import com.innowise.educationalsystem.document.subtype.translation.TranslationSu
 import org.springframework.data.annotation.TypeAlias;
 
 import java.util.List;
+import java.util.Set;
 
 @TypeAlias("Puzzle")
-@JsonTypeName("Puzzle")
-public class PuzzleSubtype extends TranslationSubtype<List<String>> {
+public class PuzzleSubtype extends TranslationSubtype<Set<String>> {
 
     public PuzzleSubtype() {
         super();
+    }
+
+    public PuzzleSubtype(Set<String> additionalData) {
+        super(additionalData);
     }
 
     public PuzzleSubtype(SubtypeDto subtypeDto) {

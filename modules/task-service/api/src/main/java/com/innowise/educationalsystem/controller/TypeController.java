@@ -2,7 +2,7 @@ package com.innowise.educationalsystem.controller;
 
 import com.innowise.educationalsystem.document.Task;
 import com.innowise.educationalsystem.dto.TaskDto;
-import com.innowise.educationalsystem.factory.TypeFactory;
+import com.innowise.educationalsystem.mapper.TaskMapper;
 import com.innowise.educationalsystem.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,24 +22,25 @@ import java.util.List;
 @RequestMapping("api/v1/type")
 public class TypeController {
     private final TaskService taskService;
-    private final TypeFactory typeFactory;
+    private final TaskMapper taskMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskDto<?, ?, ?> createTask(@RequestBody TaskDto<?, ?, ?> taskDto) {
+    public Task<?, ?> createTask(@RequestBody TaskDto<?, ?> taskDto) {
         //return taskService.save(typeFactory.provideTask(typeDto));
-        return taskDto;
+        Task<?, ?> task = taskMapper.map(taskDto);
+        return task;
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Task<?, ?, ?>> getTasks() {
+    public List<Task<?, ?>> getTasks() {
         return taskService.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Task<?, ?, ?> getTask(@PathVariable("id") String id) {
+    public Task<?, ?> getTask(@PathVariable("id") String id) {
         return taskService.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

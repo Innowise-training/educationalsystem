@@ -11,6 +11,10 @@ public abstract class TranslationSubtype<ADD> extends Subtype<ADD> {
         super();
     }
 
+    protected TranslationSubtype(ADD additionalData) {
+        super(additionalData);
+    }
+
     protected TranslationSubtype(SubtypeDto subtypeDto) {
         super(subtypeDto);
     }
