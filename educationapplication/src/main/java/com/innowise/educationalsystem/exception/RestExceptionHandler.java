@@ -1,6 +1,7 @@
 package com.innowise.educationalsystem.exception;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
+//import com.auth0.jwt.exceptions.JWTVerificationException;
+//import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -8,8 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.access.AccessDeniedException;
+//import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.access.AccessDeniedException;
+//import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +26,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.UUID;
 
 @Slf4j
-@RestControllerAdvice
+//@RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
@@ -78,53 +81,53 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    protected ResponseEntity<Object> handleWrongCredentials(BadCredentialsException ex) {
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Incorrect login or password", ex);
-        return buildResponseEntity(apiError);
-    }
+//    @ExceptionHandler(BadCredentialsException.class)
+//    protected ResponseEntity<Object> handleWrongCredentials(BadCredentialsException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Incorrect login or password", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(AccessDeniedException.class)
+//    protected ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Forbidden", ex);
+//        return buildResponseEntity(apiError);
+//    }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    protected ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex) {
-        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Forbidden", ex);
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(JWTVerificationException.class)
-    protected ResponseEntity<Object> handleJWTVerification(JWTVerificationException ex) {
-        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Invalid JWT token or token expired", ex);
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    protected ResponseEntity<Object> handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT, "User already exists", ex);
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(InviteNotValidatedException.class)
-    protected ResponseEntity<Object> handleInviteNotValidated(InviteNotValidatedException ex) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Invite is not validated", ex);
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(ClosedInviteException.class)
-    protected ResponseEntity<Object> handleClosedInvite(ClosedInviteException ex) {
-        ApiError apiError = new ApiError(HttpStatus.GONE, "Invite is no longer available", ex);
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(NoSuchRoleException.class)
-    protected ResponseEntity<Object> handleNoSuchRole(NoSuchRoleException ex) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User doesn't have such role", ex);
-        return buildResponseEntity(apiError);
-    }
-
-    @ExceptionHandler(SystemRoleDeletionException.class)
-    protected ResponseEntity<Object> handleSystemRoleDeletion(SystemRoleDeletionException ex) {
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT, "Unable to delete system roles", ex);
-        return buildResponseEntity(apiError);
-    }
+//    @ExceptionHandler(JWTVerificationException.class)
+//    protected ResponseEntity<Object> handleJWTVerification(JWTVerificationException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Invalid JWT token or token expired", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(UserAlreadyExistsException.class)
+//    protected ResponseEntity<Object> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.CONFLICT, "User already exists", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(InviteNotValidatedException.class)
+//    protected ResponseEntity<Object> handleInviteNotValidated(InviteNotValidatedException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Invite is not validated", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(ClosedInviteException.class)
+//    protected ResponseEntity<Object> handleClosedInvite(ClosedInviteException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.GONE, "Invite is no longer available", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(NoSuchRoleException.class)
+//    protected ResponseEntity<Object> handleNoSuchRole(NoSuchRoleException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, "User doesn't have such role", ex);
+//        return buildResponseEntity(apiError);
+//    }
+//
+//    @ExceptionHandler(SystemRoleDeletionException.class)
+//    protected ResponseEntity<Object> handleSystemRoleDeletion(SystemRoleDeletionException ex) {
+//        ApiError apiError = new ApiError(HttpStatus.CONFLICT, "Unable to delete system roles", ex);
+//        return buildResponseEntity(apiError);
+//    }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleAllExceptions(Exception ex) {
